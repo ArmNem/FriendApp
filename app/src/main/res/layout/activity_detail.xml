@@ -45,25 +45,24 @@
             android:text="12345678"
             android:gravity="right"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Favorite:"
-            android:gravity="right"/>
-        <ImageView
-            android:id="@+id/imgFavorite"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@drawable/ok"
-            android:scaleType="fitCenter"/>
+
+
+
 
     </GridLayout>
+
+    <CheckBox
+        android:id="@+id/CheckFav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Favorite" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <Button
+            android:id="@+id/BtnBack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left"
@@ -71,18 +70,18 @@
             android:text="Back"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.126"
+            app:layout_constraintHorizontal_bias="0.13"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.891" />
 
         <Button
-            android:id="@+id/button3"
+            android:id="@+id/BtnSave"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
-            android:text="Save"
             android:onClick="onClickSave"
+            android:text="Save"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.904"
@@ -94,13 +93,14 @@
             android:id="@+id/BtnDelete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Delete"
+            android:layout_marginStart="16dp"
             android:onClick="onClickDelete"
+            android:text="Delete"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.893" />
+            app:layout_constraintVertical_bias="0.891" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>

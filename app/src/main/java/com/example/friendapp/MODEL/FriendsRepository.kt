@@ -1,5 +1,6 @@
 package com.example.friendapp.MODEL
 
+import android.content.Intent
 import android.util.Log
 
 object FriendsRepository {
@@ -14,6 +15,14 @@ object FriendsRepository {
         Log.d("TAG","friend deleted name = $name")
         mFriends.remove(friend)
     }
+    fun findFriend(name: String?): BEFriend? {
+      val friend =  mFriends.find { friend -> friend.name == name }
+        return friend
+    }
+    fun createFriend(newfriend: BEFriend){
 
+        Log.d("TAG","friend created $newfriend")
+        mFriends.add(newfriend)
+    }
     fun getAllNames(): Array<String>  =  mFriends.map { p -> p.name }.toTypedArray()
 }

@@ -3,8 +3,11 @@ package com.example.friendapp.GUI
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.ArrayAdapter
 import android.widget.ListAdapter
+import android.widget.Toast
 import com.example.friendapp.MODEL.FriendsRepository
 import com.example.friendapp.R
 import kotlinx.android.synthetic.main.activity_main.*
@@ -30,6 +33,27 @@ class MainActivity : AppCompatActivity() {
         friendList.adapter = adapter
 
         friendList.setOnItemClickListener { _, _, position, _ -> onListItemClick(position) }
+    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        val id: Int = item.getItemId()
+
+        when (id) {
+            R.id.createFriend -> {
+                Toast.makeText(this, "Create friend selected...", Toast.LENGTH_LONG).show()
+                true
+                val intent = Intent(this, DetailActivity::class.java)
+                startActivity(intent)
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        menuInflater.inflate(R.menu.menu, menu);
+        return true;
     }
     fun onListItemClick( position: Int ) {
         // position is in the list!
