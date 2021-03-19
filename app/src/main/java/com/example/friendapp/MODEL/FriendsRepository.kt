@@ -5,8 +5,8 @@ import android.util.Log
 
 object FriendsRepository {
     val mFriends = mutableListOf<BEFriend>(
-        BEFriend("Jonas", "123", true),
-        BEFriend("Anders", "1234", false),
+        BEFriend("Jonas", "123", true,"szetviszaminimal@gmail.com","https://www.twitch.tv/"),
+        BEFriend("Anders", "1234", false,"armandnemeth.work@gmail.com","https://www.youtube.com/"),
     )
 
     fun getAll(): MutableList<BEFriend> = mFriends
