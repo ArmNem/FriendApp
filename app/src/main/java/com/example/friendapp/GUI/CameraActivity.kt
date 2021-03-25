@@ -1,16 +1,19 @@
 package com.example.friendapp.GUI
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import com.example.friendapp.R
 import kotlinx.android.synthetic.main.activity_camera.*
 import java.io.File
@@ -71,6 +74,12 @@ class CameraActivity : AppCompatActivity() {
                 Log.d(TAG, msg)
             }
         })
+
+        val intent = Intent(this,DetailActivity::class.java)
+        intent.putExtra(MediaStore.EXTRA_OUTPUT,photoFile)
+        setResult(10)
+        startActivity(intent)
+
     }
 
     private fun startCamera() {

@@ -10,13 +10,15 @@ import android.os.Bundle
 import android.telephony.SmsManager
 import android.util.Log
 import android.view.View
+import android.widget.ImageView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import com.example.friendapp.MODEL.BEFriend
-import com.example.friendapp.MODEL.FriendsRepository
+import com.example.friendapp.MODEL.FriendRepoInDB
 import com.example.friendapp.R
 import kotlinx.android.synthetic.main.activity_detail.*
-import kotlinx.android.synthetic.main.activity_main.*
+import java.io.File
 
 class DetailActivity : AppCompatActivity() {
     var iscreate = true
@@ -35,18 +37,21 @@ class DetailActivity : AppCompatActivity() {
         if (intent.extras != null) {
             iscreate = false
             val extras: Bundle = intent.extras!!
+            /*var id = extras.get("id")
             val name = extras.getString("name")
             val phone = extras.getString("phone")
             val favorite = extras.getBoolean("favorite")
             val email = extras.getString("email")
-            val source = extras.getString("source")
-            tvName.setText(name)
-            tvPhone.setText(phone)
-            tvEmail.setText(email)
-            tvSource.setText(source)
-            if (favorite)
+            val source = extras.getString("source")*/
+            val friend = extras["friend"]
+            as BEFriend
+            tvName.setText(friend.name)
+            tvPhone.setText(friend.phone)
+            tvEmail.setText(friend.email)
+            tvSource.setText(friend.source)
+            if (friend.isFavorite)
                 CheckFav.isChecked = true
-            if (!favorite)
+            if (!friend.isFavorite)
                 CheckFav.isChecked = false
         }
         else
@@ -60,18 +65,16 @@ class DetailActivity : AppCompatActivity() {
     fun onClickBack(view: View) { finish() }
     fun onClickSave(view: View) {
     if (iscreate == true) {
-       val friendToCreate = BEFriend(name = tvName.text.toString(), phone = tvPhone.text.toString(), isFavorite = CheckFav.isChecked, email = tvEmail.text.toString(), source = tvSource.text.toString())
-       val friends = FriendsRepository
-       friends.createFriend(friendToCreate)
+       val friendToCreate = BEFriend(id = 0,name = tvName.text.toString(), phone = tvPhone.text.toString(), isFavorite = CheckFav.isChecked, email = tvEmail.text.toString(), source = tvSource.text.toString())
+        val mRep = FriendRepoInDB.get()
+        mRep.insert(friendToCreate)
     }else{
-        val friends = FriendsRepository
-        val friendToUpdate = friends.findFriend(intent.extras?.getString("name"))
+        val mRep = FriendRepoInDB.get()
+        var friendToUpdate = mRep.getById(intent.extras?.get("id") as Int)
+        Log.d("a", friendToUpdate.toString())
         if (friendToUpdate != null) {
-            friendToUpdate.name = tvName.text.toString()
-            friendToUpdate.phone = tvPhone.text.toString()
-            friendToUpdate.email = tvEmail.text.toString()
-            friendToUpdate.source = tvSource.text.toString()
-            friendToUpdate.isFavorite = CheckFav.isChecked
+            friendToUpdate = BEFriend(id = intent.extras?.get("id") as Int, name = tvName.text.toString(), phone = tvPhone.text.toString(), isFavorite = CheckFav.isChecked, email = tvEmail.text.toString(),source = tvSource.text.toString())
+            mRep.update(friendToUpdate)
         }
 
     }
@@ -79,8 +82,12 @@ class DetailActivity : AppCompatActivity() {
     }
 
     fun onClickDelete(view: View) {
-        val friends = FriendsRepository
-        friends.deleteFriendByName(tvName.text.toString())
+        val mRep = FriendRepoInDB.get()
+
+        var friendToDelete = mRep.getById(intent.extras!!.getInt("id"))
+        if (friendToDelete !=null) {
+            mRep.delete(friendToDelete)
+        }
         finish()
     }
     fun onClickCALL(view: View) {
@@ -148,6 +155,22 @@ class DetailActivity : AppCompatActivity() {
 
     fun onClickCamera(view: View) {
         val intent = Intent(this, CameraActivity::class.java)
-        startActivity(intent)
+        startActivityForResult(intent,5)
+    }
+   /* @RequiresApi(Build.VERSION_CODES.N)
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        val mImage = findViewById<ImageView>(R.id.imageView)
+        if (requestCode == 5) {
+            if (resultCode == 10)
+                    //showImageFromFile(mImage,fil)
+
+        }
+    }*/
+    private fun showImageFromFile(img: ImageView, f: File) {
+        img.setImageURI(Uri.fromFile(f))
+        imageView.setImageURI(Uri.fromFile(f))
+        //mImage.setRotation(90);
+
     }
 }
