@@ -53,6 +53,8 @@ class DetailActivity : AppCompatActivity() {
                 CheckFav.isChecked = true
             if (!friend.isFavorite)
                 CheckFav.isChecked = false
+
+            Log.d("abc","" + friend)
         }
         else
         {
@@ -68,26 +70,28 @@ class DetailActivity : AppCompatActivity() {
        val friendToCreate = BEFriend(id = 0,name = tvName.text.toString(), phone = tvPhone.text.toString(), isFavorite = CheckFav.isChecked, email = tvEmail.text.toString(), source = tvSource.text.toString())
         val mRep = FriendRepoInDB.get()
         mRep.insert(friendToCreate)
+        Log.d("abc","Friend created")
     }else{
         val mRep = FriendRepoInDB.get()
-        var friendToUpdate = mRep.getById(intent.extras?.get("id") as Int)
+        var friendToUpdate = mRep.getById(intent.extras!!.get("id") as Int)
         Log.d("a", friendToUpdate.toString())
         if (friendToUpdate != null) {
-            friendToUpdate = BEFriend(id = intent.extras?.get("id") as Int, name = tvName.text.toString(), phone = tvPhone.text.toString(), isFavorite = CheckFav.isChecked, email = tvEmail.text.toString(),source = tvSource.text.toString())
+            friendToUpdate = BEFriend(id = intent.extras!!.get("id") as Int, name = tvName.text.toString(), phone = tvPhone.text.toString(), isFavorite = CheckFav.isChecked, email = tvEmail.text.toString(),source = tvSource.text.toString())
             mRep.update(friendToUpdate)
+            Log.d("abc","Friend updated" + friendToUpdate)
         }
-
     }
         finish()
     }
 
     fun onClickDelete(view: View) {
         val mRep = FriendRepoInDB.get()
-
-        var friendToDelete = mRep.getById(intent.extras!!.getInt("id"))
+        val id = intent.extras!!.getInt("id")
+        var friendToDelete = mRep.getById(id)
         if (friendToDelete !=null) {
             mRep.delete(friendToDelete)
         }
+        Log.d("abc","Friend deleted" + friendToDelete)
         finish()
     }
     fun onClickCALL(view: View) {

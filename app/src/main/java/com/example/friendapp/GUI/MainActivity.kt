@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
     }
     private fun insertTestData() {
         val mRep = FriendRepoInDB.get()
-        mRep.insert(BEFriend(0,"Peter", "234566", true, "email@email.com", "youtube.com"))
+        mRep.insert(BEFriend(0,"Peter", "234566", true, "email@email.com", "https://www.youtube.com/"))
     }
     //var cache: List<BEFriend>? = null;
     private fun setupDataObserver() {
@@ -56,7 +56,8 @@ class MainActivity : AppCompatActivity() {
             {
                 val intent = Intent(this, DetailActivity::class.java)
                 intent.putExtra("friend",friend)
-               /* intent.putExtra("id", friend.id )
+                intent.putExtra("id", friend.id )
+                /*
                 intent.putExtra("name", friend.name )
                 intent.putExtra("phone", friend.phone)
                 intent.putExtra("favorite", friend.isFavorite)
