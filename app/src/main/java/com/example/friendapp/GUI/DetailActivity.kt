@@ -1,8 +1,11 @@
 package com.example.friendapp.GUI
 
 import android.Manifest
+import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.LocationManager
 import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -19,6 +22,7 @@ import com.example.friendapp.MODEL.FriendRepoInDB
 import com.example.friendapp.R
 import kotlinx.android.synthetic.main.activity_detail.*
 import java.io.File
+import kotlin.math.log
 
 class DetailActivity : AppCompatActivity() {
     var iscreate = true
@@ -31,6 +35,7 @@ class DetailActivity : AppCompatActivity() {
             tvPhone.text = null
             tvEmail.text = null
             tvSource.text = null
+            tvLocation.text = null
             BtnDelete.visibility = View.INVISIBLE
         }
 
@@ -49,6 +54,7 @@ class DetailActivity : AppCompatActivity() {
             tvPhone.setText(friend.phone)
             tvEmail.setText(friend.email)
             tvSource.setText(friend.source)
+            tvLocation.setText(friend.location)
             if (friend.isFavorite)
                 CheckFav.isChecked = true
             if (!friend.isFavorite)
@@ -67,7 +73,7 @@ class DetailActivity : AppCompatActivity() {
     fun onClickBack(view: View) { finish() }
     fun onClickSave(view: View) {
     if (iscreate == true) {
-       val friendToCreate = BEFriend(id = 0,name = tvName.text.toString(), phone = tvPhone.text.toString(), isFavorite = CheckFav.isChecked, email = tvEmail.text.toString(), source = tvSource.text.toString())
+       val friendToCreate = BEFriend(id = 0,name = tvName.text.toString(), phone = tvPhone.text.toString(), isFavorite = CheckFav.isChecked, email = tvEmail.text.toString(), source = tvSource.text.toString(), location = tvLocation.text.toString())
         val mRep = FriendRepoInDB.get()
         mRep.insert(friendToCreate)
         Log.d("abc","Friend created")
@@ -76,7 +82,7 @@ class DetailActivity : AppCompatActivity() {
         var friendToUpdate = mRep.getById(intent.extras!!.get("id") as Int)
         Log.d("a", friendToUpdate.toString())
         if (friendToUpdate != null) {
-            friendToUpdate = BEFriend(id = intent.extras!!.get("id") as Int, name = tvName.text.toString(), phone = tvPhone.text.toString(), isFavorite = CheckFav.isChecked, email = tvEmail.text.toString(),source = tvSource.text.toString())
+            friendToUpdate = BEFriend(id = intent.extras!!.get("id") as Int, name = tvName.text.toString(), phone = tvPhone.text.toString(), isFavorite = CheckFav.isChecked, email = tvEmail.text.toString(),source = tvSource.text.toString(), location = tvLocation.text.toString())
             mRep.update(friendToUpdate)
             Log.d("abc","Friend updated" + friendToUpdate)
         }
@@ -176,5 +182,40 @@ class DetailActivity : AppCompatActivity() {
         imageView.setImageURI(Uri.fromFile(f))
         //mImage.setRotation(90);
 
+    }
+    private val permissions = arrayOf(
+        android.Manifest.permission.ACCESS_FINE_LOCATION,
+        android.Manifest.permission.ACCESS_COARSE_LOCATION
+    )
+    @SuppressLint("MissingPermission")
+    fun onClickGetLocation(view: View) {
+        requestPermissions()
+        if(!isPermissionGiven()){
+            Toast.makeText(this, "Permission to use GPS is denied", Toast.LENGTH_LONG).show()
+            return
+        }
+        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        val location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+        if(location != null){
+            tvLocation.text = "${location.latitude}, ${location.longitude}"
+        } else{
+            Toast.makeText(this, "The Location is unfortunately null", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun isPermissionGiven(): Boolean{
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            return permissions.all {f -> checkSelfPermission(f) == PackageManager.PERMISSION_GRANTED}
+        }
+        return true
+    }
+    private fun requestPermissions(){
+        if(!isPermissionGiven()){
+            Log.d("TAG", "Permission denied to use GPS - requesting it")
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                requestPermissions(permissions, 1)
+            } else
+                Log.d("TAG", "Permission to use GPS Granted")
+        }
     }
 }

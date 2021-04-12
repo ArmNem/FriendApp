@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
     }
     private fun insertTestData() {
         val mRep = FriendRepoInDB.get()
-        mRep.insert(BEFriend(0,"Peter", "234566", true, "email@email.com", "https://www.youtube.com/"))
+        //mRep.insert(BEFriend(0,"Peter", "234566", true, "email@email.com", "https://www.youtube.com/"))
     }
     //var cache: List<BEFriend>? = null;
     private fun setupDataObserver() {
