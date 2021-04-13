@@ -5,6 +5,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.room.Room
+import java.io.Serializable
 import java.util.concurrent.Executors
 
 class FriendRepoInDB {
@@ -42,6 +43,10 @@ class FriendRepoInDB {
         if (pos < cache.size)
             return cache[pos]
         return null
+    }
+    fun filter(text: String): List<BEFriend>?{
+        cache.forEach { p -> if (p.name.contains(text)) return p as List<BEFriend> ; }
+        return null;
     }
 
 

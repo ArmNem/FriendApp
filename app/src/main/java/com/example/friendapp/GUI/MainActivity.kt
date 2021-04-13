@@ -6,10 +6,12 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.ListAdapter
 import android.widget.Toast
+import androidx.core.view.isEmpty
 import androidx.lifecycle.Observer
 import com.example.friendapp.MODEL.BEFriend
 import com.example.friendapp.MODEL.FriendRepoInDB
@@ -32,19 +34,18 @@ class MainActivity : AppCompatActivity() {
     //var cache: List<BEFriend>? = null;
     private fun setupDataObserver() {
         val mRep = FriendRepoInDB.get()
-        val nameObserver = Observer<List<BEFriend>>{ persons ->
-            //cache = persons;
-            val asStrings = persons.map { p -> "${p.id}, ${p.name}"}
-            val adapter: ListAdapter = ArrayAdapter(
-                this,
-                android.R.layout.simple_list_item_1,
-                asStrings.toTypedArray()
-            )
-            friendList.adapter = adapter
-            Log.d("abc","Listview updated")
-        }
-        mRep.getAllLiveData().observe(this, nameObserver)
-
+            val nameObserver = Observer<List<BEFriend>> { persons ->
+                //cache = persons;
+                val asStrings = persons.map { p -> "${p.id}, ${p.name}" }
+                val adapter: ListAdapter = ArrayAdapter(
+                    this,
+                    android.R.layout.simple_list_item_1,
+                    asStrings.toTypedArray()
+                )
+                friendList.adapter = adapter
+                Log.d("abc", "Listview updated")
+            }
+            mRep.getAllLiveData().observe(this, nameObserver)
         friendList.onItemClickListener = AdapterView.OnItemClickListener { _, _, pos, _ -> onListItemClick(pos)}
     }
      fun onListItemClick(pos: Int) {
