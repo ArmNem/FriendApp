@@ -12,5 +12,7 @@ data class BEFriend(
     var phone: String,
     var isFavorite: Boolean,
     var email: String,
-    var source: String)
+    var source: String,
+    var location: String
+    )
     :Serializable

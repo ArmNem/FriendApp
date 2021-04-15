@@ -20,7 +20,7 @@ class FriendRepoInDB {
 
         database = Room.databaseBuilder(context.applicationContext,
             FriendDatabase::class.java,
-            "person-database").build()
+            "person-database").fallbackToDestructiveMigration().build()
 
         personDao = database.personDao()
 
