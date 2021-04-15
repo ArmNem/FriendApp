@@ -6,16 +6,13 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.ListAdapter
 import android.widget.Toast
-import androidx.core.view.isEmpty
 import androidx.lifecycle.Observer
 import com.example.friendapp.MODEL.BEFriend
 import com.example.friendapp.MODEL.FriendRepoInDB
-import com.example.friendapp.MODEL.observeOnce
 import com.example.friendapp.R
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -29,7 +26,7 @@ class MainActivity : AppCompatActivity() {
     }
     private fun insertTestData() {
         val mRep = FriendRepoInDB.get()
-        mRep.insert(BEFriend(0,"Peter", "234566", true, "email@email.com", "https://www.youtube.com/"))
+        //mRep.insert(BEFriend(0,"Peter", "234566", true, "email@email.com", "https://www.youtube.com/"))
     }
     //var cache: List<BEFriend>? = null;
     private fun setupDataObserver() {
@@ -57,7 +54,7 @@ class MainActivity : AppCompatActivity() {
             {
                 val intent = Intent(this, DetailActivity::class.java)
                 intent.putExtra("friend",friend)
-                intent.putExtra("id", friend.id )
+                //intent.putExtra("id", friend.id )
                 /*
                 intent.putExtra("name", friend.name )
                 intent.putExtra("phone", friend.phone)

@@ -68,7 +68,10 @@ class CameraActivity : AppCompatActivity() {
             }
 
             override fun onImageSaved(output: ImageCapture.OutputFileResults) {
-                val savedUri = Uri.fromFile(photoFile)
+
+                val savedUri = Uri.fromFile(photoFile) as String
+                // save in choosen user picPath column savedUri
+
                 val msg = "Photo capture succeeded: $savedUri"
                 Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
                 Log.d(TAG, msg)

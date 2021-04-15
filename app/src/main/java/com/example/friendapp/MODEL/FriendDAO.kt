@@ -27,4 +27,7 @@ interface FriendDAO {
 
     @Query("DELETE from BEFriend")
     fun deleteAll()
+
+    //@Query("UPDATE BEFriend SET picPath  = :picPath WHERE id = :id")
+    //fun addPicPath(id: Number, picPath: String)
 }

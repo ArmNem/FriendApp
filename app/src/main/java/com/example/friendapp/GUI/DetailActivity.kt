@@ -12,7 +12,6 @@ import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import com.example.friendapp.MODEL.BEFriend
 import com.example.friendapp.MODEL.FriendRepoInDB
@@ -22,6 +21,8 @@ import java.io.File
 
 class DetailActivity : AppCompatActivity() {
     var iscreate = true
+    var photoShot = " "
+    val currentFriendId = intent.extras!!.getInt("id")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
@@ -37,8 +38,10 @@ class DetailActivity : AppCompatActivity() {
         if (intent.extras != null) {
             iscreate = false
             val extras: Bundle = intent.extras!!
-            /*var id = extras.get("id")
-            val name = extras.getString("name")
+            val photoFile = extras.get("photoFile")
+            photoShot = photoFile as String
+            var id = extras.get("id")
+            /*val name = extras.getString("name")
             val phone = extras.getString("phone")
             val favorite = extras.getBoolean("favorite")
             val email = extras.getString("email")
@@ -67,7 +70,9 @@ class DetailActivity : AppCompatActivity() {
     fun onClickBack(view: View) { finish() }
     fun onClickSave(view: View) {
     if (iscreate == true) {
-       val friendToCreate = BEFriend(id = 0,name = tvName.text.toString(), phone = tvPhone.text.toString(), isFavorite = CheckFav.isChecked, email = tvEmail.text.toString(), source = tvSource.text.toString())
+       val friendToCreate = BEFriend(
+           id = 0,
+           name = tvName.text.toString(), phone = tvPhone.text.toString(), isFavorite = CheckFav.isChecked, email = tvEmail.text.toString(), source = tvSource.text.toString(), picPath = photoShot)
         val mRep = FriendRepoInDB.get()
         mRep.insert(friendToCreate)
         Log.d("abc","Friend created")
@@ -76,7 +81,9 @@ class DetailActivity : AppCompatActivity() {
         var friendToUpdate = mRep.getById(intent.extras!!.get("id") as Int)
         Log.d("a", friendToUpdate.toString())
         if (friendToUpdate != null) {
-            friendToUpdate = BEFriend(id = intent.extras!!.get("id") as Int, name = tvName.text.toString(), phone = tvPhone.text.toString(), isFavorite = CheckFav.isChecked, email = tvEmail.text.toString(),source = tvSource.text.toString())
+            friendToUpdate = BEFriend(
+                id = intent.extras!!.get("id") as Int, name = tvName.text.toString(), phone = tvPhone.text.toString(), isFavorite = CheckFav.isChecked, email = tvEmail.text.toString(),
+                source = tvSource.text.toString(), picPath = photoShot )
             mRep.update(friendToUpdate)
             Log.d("abc","Friend updated" + friendToUpdate)
         }
@@ -159,7 +166,10 @@ class DetailActivity : AppCompatActivity() {
 
     fun onClickCamera(view: View) {
         val intent = Intent(this, CameraActivity::class.java)
+        intent.putExtra("id", currentFriendId)
         startActivityForResult(intent,5)
+
+
     }
    /* @RequiresApi(Build.VERSION_CODES.N)
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -178,3 +188,4 @@ class DetailActivity : AppCompatActivity() {
 
     }
 }
+

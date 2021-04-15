@@ -1,5 +1,6 @@
 package com.example.friendapp.MODEL
 
+import android.net.Uri
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.io.Serializable
@@ -12,5 +13,7 @@ data class BEFriend(
     var phone: String,
     var isFavorite: Boolean,
     var email: String,
-    var source: String)
+    var source: String,
+    var picPath: String
+)
     :Serializable
