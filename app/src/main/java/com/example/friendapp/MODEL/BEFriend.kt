@@ -14,6 +14,7 @@ data class BEFriend(
     var isFavorite: Boolean,
     var email: String,
     var source: String,
-    var picPath: String
-)
+    var picPath: String,
+    var location: String
+    )
     :Serializable
