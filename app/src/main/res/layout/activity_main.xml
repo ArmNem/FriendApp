@@ -4,12 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    >
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/searchfield"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="search">
+        android:hint="Search"
+        android:background="@color/orange">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
@@ -21,7 +23,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/searchfield"
-        android:layout_above="@id/tvFooter"/>
+        android:layout_above="@id/tvFooter"
+        android:background="@color/yellow"
+        />
     <TextView
         android:id="@+id/tvFooter"
         android:layout_width="wrap_content"
