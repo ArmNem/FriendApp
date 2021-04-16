@@ -5,7 +5,6 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.room.Room
-import java.io.Serializable
 import java.util.concurrent.Executors
 
 class FriendRepoInDB {
@@ -66,6 +65,10 @@ class FriendRepoInDB {
 
     fun clear() {
         executor.execute { personDao.deleteAll() }
+    }
+
+    fun addPicPath(id: Int, picPath: String) {
+        executor.execute { personDao.addPicPath(id, picPath)}
     }
 
 

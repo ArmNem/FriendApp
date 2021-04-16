@@ -1,5 +1,6 @@
 package com.example.friendapp.MODEL
 
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.room.*
 
@@ -28,6 +29,6 @@ interface FriendDAO {
     @Query("DELETE from BEFriend")
     fun deleteAll()
 
-    //@Query("UPDATE BEFriend SET picPath  = :picPath WHERE id = :id")
-    //fun addPicPath(id: Number, picPath: String)
+    @Query("UPDATE BEFriend SET picPath = (:picPath) WHERE id = (:id)")
+    fun addPicPath(id: Int, picPath: String)
 }

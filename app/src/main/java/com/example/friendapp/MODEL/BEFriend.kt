@@ -10,11 +10,11 @@ import java.io.Serializable
 data class BEFriend(
     @PrimaryKey(autoGenerate = true) var id:Int,
     var name: String,
-    var phone: String,
+    var phone: String?,
     var isFavorite: Boolean,
-    var email: String,
-    var source: String,
-    var picPath: String,
-    var location: String
+    var email: String?,
+    var source: String?,
+    var picPath: String?,
+    var location: String?
     )
     :Serializable

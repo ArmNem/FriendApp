@@ -10,12 +10,14 @@ import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
 import android.telephony.SmsManager
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.net.toUri
 import com.example.friendapp.MODEL.BEFriend
 import com.example.friendapp.MODEL.FriendRepoInDB
 import com.example.friendapp.R
@@ -24,13 +26,15 @@ import java.io.File
 import kotlin.math.log
 
 class DetailActivity : AppCompatActivity() {
+
     var iscreate = true
-    var photoShot = " "
-    val currentFriendId = intent.extras!!.getInt("id")
+    var selectedFriend = BEFriend(0, "", "", false, "", "", null, "")
+    //var newFriend = BEFriend(0, "", "", false, "", "", null, "")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
-        if (intent.extras == null) {
+        if (intent.extras!!.get("newFriend") != null) {
             iscreate = true
             tvName.text = (null)
             tvPhone.text = null
@@ -40,11 +44,9 @@ class DetailActivity : AppCompatActivity() {
             BtnDelete.visibility = View.INVISIBLE
         }
 
-        if (intent.extras != null) {
+        if (intent.extras!!.get("friend") != null) {
             iscreate = false
             val extras: Bundle = intent.extras!!
-            val photoFile = extras.get("photoFile")
-            photoShot = photoFile as String
             var id = extras.get("id")
             /*val name = extras.getString("name")
             val phone = extras.getString("phone")
@@ -53,6 +55,7 @@ class DetailActivity : AppCompatActivity() {
             val source = extras.getString("source")*/
             val friend = extras["friend"]
             as BEFriend
+            selectedFriend = friend;
             tvName.setText(friend.name)
             tvPhone.setText(friend.phone)
             tvEmail.setText(friend.email)
@@ -62,37 +65,48 @@ class DetailActivity : AppCompatActivity() {
                 CheckFav.isChecked = true
             if (!friend.isFavorite)
                 CheckFav.isChecked = false
-
+            val photoPac = friend.picPath?.toUri()
+            if (friend.picPath != null)
+                imageView.setImageURI(photoPac)
             Log.d("abc","" + friend)
         }
-        else
-        {
+        else {
             Log.d("xyz", "system error: intent.extras for detailactivity is null!!!!")
         }
         BtnDelete.setOnClickListener{v -> onClickDelete(v)}
     }
 
 
-    fun onClickBack(view: View) { finish() }
+    fun onClickBack(view: View) {
+        val intent = Intent(this,MainActivity::class.java)
+        startActivity(intent)
+    }
+
     fun onClickSave(view: View) {
     if (iscreate == true) {
-
-       val friendToCreate = BEFriend(id = 0,name = tvName.text.toString(), phone = tvPhone.text.toString(), isFavorite = CheckFav.isChecked, email = tvEmail.text.toString(), source = tvSource.text.toString(), location = tvLocation.text.toString())
+        val friendToCreate = BEFriend(id = 0,name = tvName.text.toString(), phone = tvPhone.text.toString(), isFavorite = CheckFav.isChecked, email = tvEmail.text.toString(), source = tvSource.text.toString(), location = tvLocation.text.toString(), picPath = null)
         val mRep = FriendRepoInDB.get()
         mRep.insert(friendToCreate)
         Log.d("abc","Friend created")
-    }else{
+    }
+    else{
         val mRep = FriendRepoInDB.get()
-        var friendToUpdate = mRep.getById(intent.extras!!.get("id") as Int)
+        var friendToUpdate = mRep.getById(intent.extras!!.getInt("id"))
+        if (friendToUpdate != null) {
+            Log.d("b", friendToUpdate.id.toString())
+        }
         Log.d("a", friendToUpdate.toString())
         if (friendToUpdate != null) {
-
-            friendToUpdate = BEFriend(id = intent.extras!!.get("id") as Int, name = tvName.text.toString(), phone = tvPhone.text.toString(), isFavorite = CheckFav.isChecked, email = tvEmail.text.toString(),source = tvSource.text.toString(), location = tvLocation.text.toString())
-            mRep.update(friendToUpdate)
+            val mRep1 = FriendRepoInDB.get()
+            friendToUpdate = BEFriend(id = intent.extras!!.getInt("id"), name = tvName.text.toString(), phone = tvPhone.text.toString(), isFavorite = CheckFav.isChecked, email = tvEmail.text.toString(),source = tvSource.text.toString(), location = tvLocation.text.toString(), picPath = selectedFriend.picPath)
+            mRep1.update(friendToUpdate)
             Log.d("abc","Friend updated" + friendToUpdate)
+            /*val intent = Intent(this,MainActivity::class.java)
+            startActivity(intent)*/
         }
     }
-        finish()
+        val intent = Intent(this,MainActivity::class.java)
+        startActivity(intent)
     }
 
     fun onClickDelete(view: View) {
@@ -169,11 +183,21 @@ class DetailActivity : AppCompatActivity() {
     }
 
     fun onClickCamera(view: View) {
-        val intent = Intent(this, CameraActivity::class.java)
-        intent.putExtra("id", currentFriendId)
-        startActivityForResult(intent,5)
+        if (iscreate == true) {
 
+            val friendToCreate = BEFriend(id = 0,name = tvName.text.toString(), phone = tvPhone.text.toString(), isFavorite = CheckFav.isChecked, email = tvEmail.text.toString(), source = tvSource.text.toString(), location = tvLocation.text.toString(), picPath = null)
+            val mRep = FriendRepoInDB.get()
+            mRep.insert(friendToCreate)
+            Log.d("abc","Friend created")
+            val intent = Intent(this, CameraActivity::class.java)
+            intent.putExtra("friend", friendToCreate)
+            startActivityForResult(intent,5)
 
+        }else {
+            val intent = Intent(this, CameraActivity::class.java)
+            intent.putExtra("friend", selectedFriend)
+            startActivityForResult(intent, 5)
+        }
     }
    /* @RequiresApi(Build.VERSION_CODES.N)
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -227,3 +251,4 @@ class DetailActivity : AppCompatActivity() {
         }
     }
 }
+

@@ -13,24 +13,31 @@ import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.content.FileProvider
+import com.example.friendapp.MODEL.BEFriend
+import com.example.friendapp.MODEL.FriendRepoInDB
 import com.example.friendapp.R
 import kotlinx.android.synthetic.main.activity_camera.*
 import java.io.File
-import java.nio.ByteBuffer
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 class CameraActivity : AppCompatActivity() {
-    private var imageCapture: ImageCapture? = null
 
+    private var imageCapture: ImageCapture? = null
     private lateinit var outputDirectory: File
     private lateinit var cameraExecutor: ExecutorService
+    var selectedFriend = BEFriend(0, "", "", false, "", "", null, "")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_camera)
+        if (intent.extras!!.get("friend") != null) {
+            val extras: Bundle = intent.extras!!
+            val friend = extras["friend"] as BEFriend
+            selectedFriend = friend;
+        }
         // Request camera permissions
         if (allPermissionsGranted()) {
             startCamera()
@@ -69,9 +76,10 @@ class CameraActivity : AppCompatActivity() {
 
             override fun onImageSaved(output: ImageCapture.OutputFileResults) {
 
-                val savedUri = Uri.fromFile(photoFile) as String
+                val savedUri = Uri.fromFile(photoFile)
                 // save in choosen user picPath column savedUri
-
+                val mRep = FriendRepoInDB.get()
+                mRep.addPicPath(selectedFriend.id, savedUri.toString())
                 val msg = "Photo capture succeeded: $savedUri"
                 Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
                 Log.d(TAG, msg)
@@ -80,7 +88,10 @@ class CameraActivity : AppCompatActivity() {
 
         val intent = Intent(this,DetailActivity::class.java)
         intent.putExtra(MediaStore.EXTRA_OUTPUT,photoFile)
+        intent.putExtra("friend", selectedFriend)
+        intent.putExtra("id",selectedFriend.id)
         setResult(10)
+        finish()
         startActivity(intent)
 
     }
