@@ -218,4 +218,19 @@ class DetailActivity : AppCompatActivity() {
                 Log.d("TAG", "Permission to use GPS Granted")
         }
     }
+
+    fun onClickShowMaps(view: View) {
+        val intent = Intent(this, MapsActivity::class.java)
+        //intent.data = Uri.parse("${tvLocation.text}")
+        intent.putExtra("location", tvLocation.text)
+        //intent.putExtra("id", friend.id )
+        startActivity(intent)
+//        val sendIntent = Intent(Intent.ACTION_VIEW)
+//        sendIntent.data = Uri.parse("sms:${tvPhone.text}")
+//        sendIntent.putExtra("sms_body", "Hi, it goes well on the android course...")
+//        startActivity(sendIntent)
+        if(tvLocation == null){
+            Toast.makeText(this, "There is no location for this friend", Toast.LENGTH_SHORT)
+        }
+    }
 }

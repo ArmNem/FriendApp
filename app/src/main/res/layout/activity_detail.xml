@@ -184,6 +184,15 @@
                 app:srcCompat="@android:drawable/ic_menu_mylocation"
                 android:onClick="onClickGetLocation"/>
 
+            <Button
+                android:id="@+id/btnMaps"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="4"
+                android:layout_column="4"
+                android:text="Show"
+                android:onClick="onClickShowMaps"/>
+
             <ImageButton
                 android:id="@+id/chatbutton"
                 android:layout_width="wrap_content"
