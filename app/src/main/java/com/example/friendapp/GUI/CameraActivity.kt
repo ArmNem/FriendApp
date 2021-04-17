@@ -29,6 +29,7 @@ class CameraActivity : AppCompatActivity() {
     private lateinit var outputDirectory: File
     private lateinit var cameraExecutor: ExecutorService
     var selectedFriend = BEFriend(0, "", "", false, "", "", null, "")
+    var uri = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,24 +78,32 @@ class CameraActivity : AppCompatActivity() {
             override fun onImageSaved(output: ImageCapture.OutputFileResults) {
 
                 val savedUri = Uri.fromFile(photoFile)
+                uri = savedUri.toString()
                 // save in choosen user picPath column savedUri
-                val mRep = FriendRepoInDB.get()
-                mRep.addPicPath(selectedFriend.id, savedUri.toString())
                 val msg = "Photo capture succeeded: $savedUri"
                 Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
+                Log.d("abc", "uri inside empty string now:" + " " + uri)
+                Log.d("abc",selectedFriend.id.toString())
                 Log.d(TAG, msg)
+                val mRep = FriendRepoInDB.get()
+                mRep.addPicPath(selectedFriend.id, uri)
             }
+
         })
 
+        Log.d("abc", "uri before detail activity" + uri)
         val intent = Intent(this,DetailActivity::class.java)
         intent.putExtra(MediaStore.EXTRA_OUTPUT,photoFile)
         intent.putExtra("friend", selectedFriend)
         intent.putExtra("id",selectedFriend.id)
+        // intent.putExtra("PicUri",uri)
+        Log.d("abc",selectedFriend.toString())
         setResult(10)
         finish()
         startActivity(intent)
-
     }
+
+    
 
     private fun startCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
